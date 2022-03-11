@@ -37,16 +37,19 @@ module.exports = grammar({
         optional(seq(alias(/[aA][sS]/, "AS"), field("as", $.image_alias)))
       ),
 
+    _argv_or_shell_choice: ($) => 
+      choice($.string_array, $.shell_command),
+
     run_instruction: ($) =>
       seq(
         alias(/[rR][uU][nN]/, "RUN"),
-        choice($.string_array, $.shell_command)
+        $._argv_or_shell_choice
       ),
 
     cmd_instruction: ($) =>
       seq(
         alias(/[cC][mM][dD]/, "CMD"),
-        choice($.string_array, $.shell_command)
+        $._argv_or_shell_choice
       ),
 
     label_instruction: ($) =>
@@ -87,7 +90,7 @@ module.exports = grammar({
     entrypoint_instruction: ($) =>
       seq(
         alias(/[eE][nN][tT][rR][yY][pP][oO][iI][nN][tT]/, "ENTRYPOINT"),
-        choice($.string_array, $.shell_command)
+        $._argv_or_shell_choice
       ),
 
     volume_instruction: ($) =>
